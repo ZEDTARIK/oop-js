@@ -30,7 +30,7 @@ class User {
                                 <td>${phone}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info  edit">Edit</button>
-                                    <button class="btn btn-sm btn-danger delete">Delete</button>
+                                    <button class="btn btn-sm btn-danger delete" data-id="${id}">Delete</button>
                                 </td>
                             </tr>`;
 
@@ -71,3 +71,21 @@ form.addEventListener("submit", (e) => {
 
 // loading page 
 User.dispalyDataFormLocalStorage();
+
+tableBody.addEventListener("click", (e)=> {
+
+    if(e.target.classList.contains("delete")) {
+        
+    const id = e.target.getAttribute("data-id");
+
+    // remove from Html 
+    e.target.parentElement.parentElement.remove();
+
+    // remove from LocalStorage
+    
+    const users = JSON.parse(localStorage.getItem("UsersData"));
+    const newdata = users.filter(us => us.id != id);
+    localStorage.setItem("UsersData", JSON.stringify(newdata));
+    }
+
+});
