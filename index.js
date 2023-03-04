@@ -19,15 +19,15 @@ class User {
         this.phone = phone
     }
 
-    showData() {
+    static showHTML(id, username, email, phone) {
         const trElement = document.createElement("tr");
 
         trElement.innerHTML = `
                             <tr role="row" class="odd">
-                                <td>${this.id}</td>
-                                <td>${this.username}</td>
-                                <td>${this.email}</td>
-                                <td>${this.phone}</td>
+                                <td>${id}</td>
+                                <td>${username}</td>
+                                <td>${email}</td>
+                                <td>${phone}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info  edit">Edit</button>
                                     <button class="btn btn-sm btn-danger delete">Delete</button>
@@ -35,6 +35,25 @@ class User {
                             </tr>`;
 
         tableBody.appendChild(trElement);
+    }
+
+    showData() {
+        User.showHTML(this.id, this.username, this.email, this.phone);
+        return this;
+    }
+
+    addToLocalStorage() {
+        const allData = JSON.parse(localStorage.getItem("UsersData")) ?? [];
+        allData.push({ id: this.id, username: this.username, email: this.email, phone: this.phone });
+        localStorage.setItem("UsersData", JSON.stringify(allData));
+    }
+
+    static dispalyDataFormLocalStorage() {
+        if (localStorage.getItem("UsersData")) {
+            JSON.parse(localStorage.getItem("UsersData")).forEach((item) => {
+                User.showHTML(item.id, item.username, item.email, item.phone);
+            });
+        }
     }
 
 }
@@ -46,6 +65,9 @@ form.addEventListener("submit", (e) => {
 
     let id = Math.floor(Math.random() * 100000);
     const user = new User(id, inputName.value, inputEmail.value, inputPhone.value);
-    user.showData();
+    user.showData().addToLocalStorage();
 
 });
+
+// loading page 
+User.dispalyDataFormLocalStorage();
